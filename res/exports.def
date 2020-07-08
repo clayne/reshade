@@ -436,11 +436,11 @@ EXPORTS
 	SetCursorPos = HookSetCursorPosition
 
 	; ws2_32.dll
-	send = HookSend @19
-	sendto = HookSendTo @20
-	recv = HookRecv @16
-	recvfrom = HookRecvFrom @17
-	WSASend = HookWSASend @96
-	WSASendTo = HookWSASendTo @99
-	WSARecv = HookWSARecv @91
-	WSARecvFrom = HookWSARecvFrom @93
+	; send = HookSend @19
+	; sendto = HookSendTo @20
+	; recv = HookRecv @16
+	; recvfrom = HookRecvFrom @17
+	; WSASend = HookWSASend @96
+	; WSASendTo = HookWSASendTo @99
+	; WSARecv = HookWSARecv @91
+	; WSARecvFrom = HookWSARecvFrom @93

@@ -8,7 +8,7 @@
 #include <Winsock2.h>
 
 volatile long g_network_traffic = 0;
-
+/*
 HOOK_EXPORT int WSAAPI HookWSASend(SOCKET s, LPWSABUF lpBuffers, DWORD dwBufferCount, LPDWORD lpNumberOfBytesSent, DWORD dwFlags, LPWSAOVERLAPPED lpOverlapped, LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine)
 {
 	for (DWORD i = 0; i < dwBufferCount; ++i)
@@ -86,3 +86,4 @@ HOOK_EXPORT int WSAAPI HookRecvFrom(SOCKET s, char *buf, int len, int flags, str
 
 	return num_bytes_recieved;
 }
+*/
