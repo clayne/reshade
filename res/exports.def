@@ -399,7 +399,7 @@ EXPORTS
 	glVertex4sv
 	glVertexPointer
 	glViewport
-	
+
 	wglChoosePixelFormat
 	wglCopyContext
 	wglCreateContext
@@ -411,7 +411,7 @@ EXPORTS
 	wglGetCurrentDC
 	wglGetLayerPaletteEntries
 	wglGetPixelFormat
-	wglGetProcAddress	
+	wglGetProcAddress
 	wglMakeCurrent
 	wglRealizeLayerPalette
 	wglSetLayerPaletteEntries
@@ -448,11 +448,11 @@ EXPORTS
 	SetCursorPos = HookSetCursorPosition
 
 	; ws2_32.dll (Uses ordinals in ws2_32.lib for most exports)
-	send = HookSend
-	sendto = HookSendTo
-	recv = HookRecv
-	recvfrom = HookRecvFrom
-	WSASend = HookWSASend @96
-	WSASendTo = HookWSASendTo @99
-	WSARecv = HookWSARecv @91
-	WSARecvFrom = HookWSARecvFrom @93
+	; send = HookSend
+	; sendto = HookSendTo
+	; recv = HookRecv
+	; recvfrom = HookRecvFrom
+	; WSASend = HookWSASend @96
+	; WSASendTo = HookWSASendTo @99
+	; WSARecv = HookWSARecv @91
+	; WSARecvFrom = HookWSARecvFrom @93

@@ -225,7 +225,7 @@ void reshade::runtime::on_present()
 	}
 	else
 	{
-		_has_high_network_activity = traffic > 10;
+		_has_high_network_activity = false;// traffic > 10;
 		traffic = 0;
 		cooldown = 60;
 	}

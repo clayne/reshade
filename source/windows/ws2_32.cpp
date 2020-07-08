@@ -36,7 +36,7 @@ static bool is_local_socket(SOCKET s)
 }
 
 volatile long g_network_traffic = 0;
-
+/*
 HOOK_EXPORT int WSAAPI HookWSASend(SOCKET s, LPWSABUF lpBuffers, DWORD dwBufferCount, LPDWORD lpNumberOfBytesSent, DWORD dwFlags, LPWSAOVERLAPPED lpOverlapped, LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine)
 {
 	if (!is_local_socket(s))
@@ -116,3 +116,4 @@ HOOK_EXPORT int WSAAPI HookRecvFrom(SOCKET s, char *buf, int len, int flags, str
 
 	return num_bytes_recieved;
 }
+*/
