@@ -759,11 +759,6 @@ void reshade::runtime::on_present()
 	if (!ini_file::flush_cache())
 		_preset_save_successfull = false;
 
-	}
-
-	if (std::numeric_limits<long>::max() != g_network_traffic)
-		g_network_traffic = 0;
-#endif
 }
 
 void reshade::runtime::load_config()
