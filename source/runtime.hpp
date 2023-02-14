@@ -475,6 +475,7 @@ namespace reshade
 		int _editor_font_size = 13;
 		int _style_index = 2;
 		int _editor_style_index = 0;
+		int _language = 0;
 		std::filesystem::path _font;
 		std::filesystem::path _editor_font;
 		std::filesystem::path _file_selection_path;

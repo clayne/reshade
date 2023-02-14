@@ -331,6 +331,7 @@ void reshade::runtime::save_config_gui(ini_file &config) const
 	config.set("STYLE", "StyleIndex", _style_index);
 	config.set("STYLE", "TabRounding", imgui_style.TabRounding);
 	config.set("STYLE", "WindowRounding", imgui_style.WindowRounding);
+	config.set("STYLE", "language", _language);
 
 	// Do not save custom style colors by default, only when actually used and edited
 
@@ -1939,6 +1940,12 @@ void reshade::runtime::draw_gui_settings()
 			}
 			ImGui::EndChild();
 		}
+
+		if (ImGui::Combo("Language", &_language, "English\0Chinese\0"))
+		{
+			modified = true;
+		}
+
 		#pragma endregion
 
 		#pragma region Editor Style
