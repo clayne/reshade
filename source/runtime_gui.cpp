@@ -125,7 +125,7 @@ void reshade::runtime::build_font_atlas()
 		const std::filesystem::path &font_path = (i == 0) ? _font : _editor_font;
 
 		std::error_code ec;
-		if (!std::filesystem::is_regular_file(font_path, ec) || !atlas->AddFontFromFileTTF(font_path.u8string().c_str(), cfg.SizePixels))
+		if (!std::filesystem::is_regular_file(font_path, ec) || !atlas->AddFontFromFileTTF(font_path.u8string().c_str(), cfg.SizePixels, nullptr, atlas->GetGlyphRangesChineseSimplifiedCommon()))
 			atlas->AddFontDefault(&cfg); // Use default font if custom font failed to load or does not exist
 
 		if (i == 0)
@@ -983,7 +983,8 @@ void reshade::runtime::draw_gui()
 			{ "Settings", &runtime::draw_gui_settings },
 			{ "Statistics", &runtime::draw_gui_statistics },
 			{ "Log", &runtime::draw_gui_log },
-			{ "About", &runtime::draw_gui_about }
+			{ "About", &runtime::draw_gui_about },
+			{ "Test", &runtime::draw_gui_test }
 		};
 
 		const ImGuiID root_space_id = ImGui::GetID("Dockspace");
@@ -1854,7 +1855,7 @@ void reshade::runtime::draw_gui_settings()
 #endif
 
 		#pragma region Style
-		if (ImGui::Combo("Global style", &_style_index, "Dark\0Light\0Default\0Custom Simple\0Custom Advanced\0Solarized Dark\0Solarized Light\0"))
+		if (ImGui::Combo(getLanguageText("global_style",_language), &_style_index, "Dark\0Light\0Default\0Custom Simple\0Custom Advanced\0Solarized Dark\0Solarized Light\0"))
 		{
 			modified = true;
 			load_custom_style();
@@ -1941,7 +1942,7 @@ void reshade::runtime::draw_gui_settings()
 			ImGui::EndChild();
 		}
 
-		if (ImGui::Combo("Language", &_language, "English\0Chinese\0"))
+		if (ImGui::Combo(getLanguageText("language",_language), &_language, u8"English\0ÖÐÎÄ\0"))
 		{
 			modified = true;
 		}
@@ -1949,7 +1950,7 @@ void reshade::runtime::draw_gui_settings()
 		#pragma endregion
 
 		#pragma region Editor Style
-		if (ImGui::Combo("Text editor style", &_editor_style_index, "Dark\0Light\0Custom\0Solarized Dark\0Solarized Light\0"))
+		if (ImGui::Combo(getLanguageText("text_editor_style",_language), &_editor_style_index, "Dark\0Light\0Custom\0Solarized Dark\0Solarized Light\0"))
 		{
 			modified = true;
 			load_custom_style();
@@ -2581,6 +2582,24 @@ This Font Software is licensed under the SIL Open Font License, Version 1.1. (ht
 	}
 
 	ImGui::PopTextWrapPos();
+}
+void reshade::runtime::draw_gui_test() {
+	ImGui::Text("Hello, world %d", test_frame);
+	if (test_frame % 100 == 0) {
+		const api::resource resource = _back_buffer_resolved != 0 ? _back_buffer_resolved : get_current_back_buffer();
+
+		api::resource_view img;
+		!_device->create_resource_view(resource, api::resource_usage::shader_resource, api::resource_view_desc(api::format::r8g8b8a8_snorm), &img);
+
+		const float total_width = ImGui::GetContentRegionAvail().x;
+		const unsigned int num_columns = static_cast<unsigned int>(std::ceilf(total_width / (55.0f * _font_size)));
+		const float single_image_width = (total_width / num_columns) - 5.0f;
+		const float aspect_ratio = 16 / 9;
+
+		ImGui::Image(img.handle, ImVec2(single_image_width, single_image_width / aspect_ratio));
+	}
+	test_frame++;
+
 }
 #if RESHADE_ADDON
 void reshade::runtime::draw_gui_addons()
