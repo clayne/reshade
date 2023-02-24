@@ -864,6 +864,7 @@ void reshade::runtime::load_config()
 
 #if RESHADE_GUI
 	load_config_gui(config);
+	//load_ui_text(_ui_text_path);
 #endif
 }
 void reshade::runtime::save_config() const

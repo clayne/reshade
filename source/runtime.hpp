@@ -15,6 +15,7 @@
 #include <vector>
 #include <unordered_map>
 #include "reshade_api.hpp"
+#include <ini_file.hpp>
 #if RESHADE_GUI
 #include "imgui_code_editor.hpp"
 #endif
@@ -433,6 +434,8 @@ namespace reshade
 		unsigned int _fps_pos = 1;
 		unsigned int _clock_format = 0;
 		unsigned int _input_processing_mode = 2;
+
+		ini_file &_ut = language_config();
 
 		api::resource _font_atlas_tex = {};
 		api::resource_view _font_atlas_srv = {};

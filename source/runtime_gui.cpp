@@ -125,7 +125,7 @@ void reshade::runtime::build_font_atlas()
 		const std::filesystem::path &font_path = (i == 0) ? _font : _editor_font;
 
 		std::error_code ec;
-		if (!std::filesystem::is_regular_file(font_path, ec) || !atlas->AddFontFromFileTTF(font_path.u8string().c_str(), cfg.SizePixels, nullptr, atlas->GetGlyphRangesChineseSimplifiedCommon()))
+		if (!std::filesystem::is_regular_file(font_path, ec) || !atlas->AddFontFromFileTTF(font_path.u8string().c_str(), cfg.SizePixels, nullptr, atlas->GetGlyphRangesChineseFull()))
 			atlas->AddFontDefault(&cfg); // Use default font if custom font failed to load or does not exist
 
 		if (i == 0)
@@ -983,8 +983,7 @@ void reshade::runtime::draw_gui()
 			{ "Settings", &runtime::draw_gui_settings },
 			{ "Statistics", &runtime::draw_gui_statistics },
 			{ "Log", &runtime::draw_gui_log },
-			{ "About", &runtime::draw_gui_about },
-			{ "Test", &runtime::draw_gui_test }
+			{ "About", &runtime::draw_gui_about }
 		};
 
 		const ImGuiID root_space_id = ImGui::GetID("Dockspace");
@@ -1461,7 +1460,7 @@ void reshade::runtime::draw_gui_home()
 	}
 
 	if (!_effects_enabled)
-		ImGui::Text("Effects are disabled. Press '%s' to enable them again.", input::key_name(_effects_key_data).c_str());
+		ImGui::Text(_ut.get_char("effect_disable","chn"), input::key_name(_effects_key_data).c_str());
 
 	if (_tutorial_index > 1)
 	{
@@ -2582,24 +2581,6 @@ This Font Software is licensed under the SIL Open Font License, Version 1.1. (ht
 	}
 
 	ImGui::PopTextWrapPos();
-}
-void reshade::runtime::draw_gui_test() {
-	ImGui::Text("Hello, world %d", test_frame);
-	if (test_frame % 100 == 0) {
-		const api::resource resource = _back_buffer_resolved != 0 ? _back_buffer_resolved : get_current_back_buffer();
-
-		api::resource_view img;
-		!_device->create_resource_view(resource, api::resource_usage::shader_resource, api::resource_view_desc(api::format::r8g8b8a8_snorm), &img);
-
-		const float total_width = ImGui::GetContentRegionAvail().x;
-		const unsigned int num_columns = static_cast<unsigned int>(std::ceilf(total_width / (55.0f * _font_size)));
-		const float single_image_width = (total_width / num_columns) - 5.0f;
-		const float aspect_ratio = 16 / 9;
-
-		ImGui::Image(img.handle, ImVec2(single_image_width, single_image_width / aspect_ratio));
-	}
-	test_frame++;
-
 }
 #if RESHADE_ADDON
 void reshade::runtime::draw_gui_addons()

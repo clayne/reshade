@@ -71,6 +71,22 @@ public:
 		value = convert<T>(it2->second, 0);
 		return true;
 	}
+	/// <summary>
+	/// 返回char类型的ini文件属性
+	/// </summary>
+	char* get_char(const std::string &section, const std::string &key) {
+		const auto it1 = _sections.find(section);
+		char *unknow = "?";
+		if (it1 == _sections.end())
+			return unknow;
+		const auto it2 = it1->second.find(key);
+		if (it2 == it1->second.end())
+			return unknow;
+		std::string value = convert<std::string>(it2->second, 0);
+		char *ch = new char[value.length() + 1];
+		strcpy(ch, value.c_str());
+		return ch;
+	}
 	template <typename T, size_t SIZE>
 	bool get(const std::string &section, const std::string &key, T(&values)[SIZE]) const
 	{
@@ -324,4 +340,5 @@ namespace reshade
 	/// Global configuration that can be used for general settings that are not specific to an effect runtime instance.
 	/// </summary>
 	ini_file &global_config();
+	ini_file &language_config();
 }
