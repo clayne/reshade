@@ -35,6 +35,8 @@ public:
 	/// <param name="path">Path to the INI file to access.</param>
 	explicit ini_file(const std::filesystem::path &path);
 
+	const std::string languages = {"chn", "eng"};
+
 	/// <summary>
 	/// Gets the path to this INI file.
 	/// </summary>
@@ -71,22 +73,102 @@ public:
 		value = convert<T>(it2->second, 0);
 		return true;
 	}
+
 	/// <summary>
-	/// 返回char类型的ini文件属性
+	/// 根据用户选择的语言，返回语言类型。此处语言顺序与 runtime_gui.cpp 中设置语言的 Combo 中的顺序相同。
+	/// Return language type according to user selection. The order of language here is the same as language setting combo in runtime_gui.cpp.
 	/// </summary>
-	char* get_char(const std::string &section, const std::string &key) {
-		const auto it1 = _sections.find(section);
+	/// <param name="language">
+	///	Combo返回值。
+	/// Combo return value.
+	/// </param>
+	/// <returns>
+	/// 语言类型标记，与 Language.ini 中相同。
+	/// Language label, the same as Language.ini. 
+	/// </returns>
+	char *get_language_type(const int language) {
+		switch (language)
+		{
+		case 0:
+			return "chn";
+		case 1:
+			return "eng";
+		default:
+			return "eng";
+		}
+	}
+
+	/// <summary>
+	///	返回文本内容，用于多语言。
+	/// return text, for multiple Language.
+	/// </summary>
+	char* get_char(const std::string &item, const int language) {
+		const auto it1 = _sections.find(item);
 		char *unknow = "?";
 		if (it1 == _sections.end())
 			return unknow;
-		const auto it2 = it1->second.find(key);
-		if (it2 == it1->second.end())
-			return unknow;
+		auto it2 = it1->second.find(get_language_type(language));
+		if (it2 == it1->second.end()) {
+			// 没有该语言内容，且非英语，则转为英语
+			// Fallback to English if unable to found target language label.
+			if (language != 1) {
+				it2 = it1->second.find("eng");
+				if (it2 == it1->second.end())
+					return unknow;
+			}
+			else {
+				return unknow;
+			}
+		}
 		std::string value = convert<std::string>(it2->second, 0);
 		char *ch = new char[value.length() + 1];
 		strcpy(ch, value.c_str());
 		return ch;
 	}
+
+	/// <summary>
+	/// 获取用于Combo的选项文本。
+	/// Get the item text for Combo.
+	/// </summary>
+	const char** get_item_char(const std::string &item, const int language) {
+		const auto it1 = _sections.find(item);
+		const char *unknow_text[1] = {"?"};
+		if(it1 == _sections.end())
+			return unknow_text;
+		auto it2 = it1->second.find(get_language_type(language));
+		if (it2 == it1->second.end()) {
+			// 没有该语言内容，且非英语，则转为英语
+			// Fallback to English if unable to found target language label.
+			if (language != 1) {
+				it2 = it1->second.find("eng");
+				if (it2 == it1->second.end())
+					return unknow_text;
+			}
+			else {
+				return unknow_text;
+			}
+		}
+		const char** ch = new const char *[it2->second.size()];
+		for (unsigned int i = 0; i < it2->second.size(); i++) {
+			ch[i] = it2->second[i].c_str();
+		}
+		return ch;
+	}
+
+	/// <summary>
+	/// 获取Combo选项数量。
+	/// Get the number of combo items.
+	/// </summary>
+	int get_item_count(const std::string &item) {
+		const auto it1 = _sections.find(item);
+		if(it1 == _sections.end())
+			return 0;
+		const auto it2 = it1->second.find("eng");
+		if(it2 == it1->second.end())
+			return 0;
+		return it2->second.size();
+	}
+
 	template <typename T, size_t SIZE>
 	bool get(const std::string &section, const std::string &key, T(&values)[SIZE]) const
 	{

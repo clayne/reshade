@@ -479,21 +479,7 @@ namespace reshade
 		int _editor_font_size = 13;
 		int _style_index = 2;
 		int _editor_style_index = 0;
-		int _language = 0;
-
-		std::unordered_map<std::string, std::vector<std::string>> _language_text = {
-			{"language", {u8"显示语言", "Display Language"}},
-			{"global_style", {u8"全局样式", "global_style"}},
-			{"text_editor_style", {u8"文本编辑器样式", "text_editor_style"}},
-		};
-
-		char *getLanguageText(std::string name, int language)
-		{
-			std::string str = _language_text[name][language];
-			char *ch = new char[str.length() + 1];
-			strcpy(ch, str.c_str());
-			return ch;
-		}
+		int _lang = 0;
 
 		std::filesystem::path _font;
 		std::filesystem::path _editor_font;

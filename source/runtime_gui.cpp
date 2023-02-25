@@ -331,7 +331,7 @@ void reshade::runtime::save_config_gui(ini_file &config) const
 	config.set("STYLE", "StyleIndex", _style_index);
 	config.set("STYLE", "TabRounding", imgui_style.TabRounding);
 	config.set("STYLE", "WindowRounding", imgui_style.WindowRounding);
-	config.set("STYLE", "language", _language);
+	config.set("STYLE", "language", _lang);
 
 	// Do not save custom style colors by default, only when actually used and edited
 
@@ -1460,7 +1460,7 @@ void reshade::runtime::draw_gui_home()
 	}
 
 	if (!_effects_enabled)
-		ImGui::Text(_ut.get_char("effect_disable","chn"), input::key_name(_effects_key_data).c_str());
+		ImGui::Text(_ut.get_char("effect_disable",_lang), input::key_name(_effects_key_data).c_str());
 
 	if (_tutorial_index > 1)
 	{
@@ -1854,7 +1854,7 @@ void reshade::runtime::draw_gui_settings()
 #endif
 
 		#pragma region Style
-		if (ImGui::Combo(getLanguageText("global_style",_language), &_style_index, "Dark\0Light\0Default\0Custom Simple\0Custom Advanced\0Solarized Dark\0Solarized Light\0"))
+		if (ImGui::Combo(_ut.get_char("global_style",_lang), &_style_index, _ut.get_item_char("global_style_items", _lang), _ut.get_item_count("global_style_items")))
 		{
 			modified = true;
 			load_custom_style();
@@ -1941,7 +1941,7 @@ void reshade::runtime::draw_gui_settings()
 			ImGui::EndChild();
 		}
 
-		if (ImGui::Combo(getLanguageText("language",_language), &_language, u8"English\0中文\0"))
+		if (ImGui::Combo(_ut.get_char("language",_lang), &_lang, u8"中文\0English\0"))
 		{
 			modified = true;
 		}
@@ -1949,7 +1949,7 @@ void reshade::runtime::draw_gui_settings()
 		#pragma endregion
 
 		#pragma region Editor Style
-		if (ImGui::Combo(getLanguageText("text_editor_style",_language), &_editor_style_index, "Dark\0Light\0Custom\0Solarized Dark\0Solarized Light\0"))
+		if (ImGui::Combo(_ut.get_char("text_editor_style", _lang), &_editor_style_index, _ut.get_item_char("text_editor_style_items",_lang), _ut.get_item_count("text_editor_style_items")))
 		{
 			modified = true;
 			load_custom_style();
