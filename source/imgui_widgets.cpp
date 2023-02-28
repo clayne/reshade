@@ -289,12 +289,12 @@ bool reshade::imgui::font_input_box(const char *name, std::filesystem::path &pat
 	return res;
 }
 
-bool reshade::imgui::search_input_box(char *filter, int filter_size, float width)
+bool reshade::imgui::search_input_box(const char* label ,char *filter, int filter_size, float width)
 {
 	bool res = false;
 	const bool show_clear_button = filter[0] != '\0';
 
-	if (ImGui::InputTextEx("##filter", "Search " ICON_FK_SEARCH, filter, filter_size,
+	if (ImGui::InputTextEx("##filter", label, filter, filter_size,
 			ImVec2(width - (show_clear_button ? ImGui::GetFrameHeight() + ImGui::GetStyle().ItemSpacing.x : 0.0001f), 0), ImGuiInputTextFlags_AutoSelectAll))
 		res = true;
 

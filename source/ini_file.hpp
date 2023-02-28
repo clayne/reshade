@@ -9,6 +9,7 @@
 #include <vector>
 #include <filesystem>
 #include <unordered_map>
+#include <fonts/forkawesome.h>
 
 extern std::filesystem::path g_reshade_dll_path;
 extern std::filesystem::path g_reshade_base_path;
@@ -99,10 +100,83 @@ public:
 	}
 
 	/// <summary>
+	/// 替换转义字符
+	/// </summary>
+	std::string transfer(std::string str, std::string v1, std::string v2) {
+		while (true) {
+			int pos = str.find(v1);
+			if (pos >= 0) {
+				str.replace(pos, v1.length(), v2);
+			}
+			else {
+				return str;
+			}
+		}
+	}
+
+	/// <summary>
+	/// 图标转义
+	/// </summary>
+	std::string icon_transfer(std::string str, std::string icon) {
+		if (icon == "") {
+			return str;
+		}
+		else if (icon == "cancel") {
+			str = transfer(str, "\\uf00d", ICON_FK_CANCEL);
+		}
+		else if (icon == "file") {
+			str = transfer(str, "\\uf016", ICON_FK_FILE);
+		}
+		else if (icon == "file_code") {
+			str = transfer(str, "\\uf1c9", ICON_FK_FILE_CODE);
+		}
+		else if (icon == "file_image") {
+			str = transfer(str, "\\uf1c5", ICON_FK_FILE_IMAGE);
+		}
+		else if (icon == "floppy") {
+			str = transfer(str, "\\uf0c7", ICON_FK_FLOPPY);
+		}
+		else if (icon == "folder") {
+			str = transfer(str, "\\uf114", ICON_FK_FOLDER);
+		}
+		else if (icon == "folder_open") {
+			str = transfer(str, "\\uf115", ICON_FK_FOLDER_OPEN);
+		}
+		else if (icon == "minus") {
+			str = transfer(str, "\\uf068", ICON_FK_MINUS);
+		}
+		else if (icon == "ok") {
+			str = transfer(str, "\\uf00c", ICON_FK_OK);
+		}
+		else if (icon == "pencil") {
+			str = transfer(str, "\\uf040", ICON_FK_PENCIL);
+		}
+		else if (icon == "plus") {
+			str = transfer(str, "\\uf067", ICON_FK_PLUS);
+		}
+		else if (icon == "refresh") {
+			str = transfer(str, "\\uf021", ICON_FK_REFRESH);
+		}
+		else if (icon == "search") {
+			str = transfer(str, "\\uf002", ICON_FK_SEARCH);
+		}
+		else if (icon == "undo") {
+			str = transfer(str, "\\uf0e2", ICON_FK_UNDO);
+		}
+		else if (icon == "warning") {
+			str = transfer(str, "\\uf071", ICON_FK_WARNING);
+		}
+		else {
+			return str;
+		}
+		return str;
+	}
+
+	/// <summary>
 	///	返回文本内容，用于多语言。
 	/// return text, for multiple Language.
 	/// </summary>
-	char* get_char(const std::string &item, const int language) {
+	char* get_char(const std::string &item, const int language, std::string icon="") {
 		const auto it1 = _sections.find(item);
 		char *unknow = "?";
 		if (it1 == _sections.end())
@@ -121,6 +195,14 @@ public:
 			}
 		}
 		std::string value = convert<std::string>(it2->second, 0);
+		// 读取ini文件会将换行符读为 \\n ,替换 \\n 为换行符
+		// reading ini file will make \n into \\n, replace \\n by real \n.
+		value = transfer(value, "\\n", "\n");
+
+		// 图标转义
+		value = icon_transfer(value, icon);
+		
+		value = transfer(value, "\\uf021", u8"\uf021");
 		char *ch = new char[value.length() + 1];
 		strcpy(ch, value.c_str());
 		return ch;

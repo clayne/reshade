@@ -49,7 +49,7 @@ namespace reshade::imgui
 	/// <summary>
 	/// Adds a search text box widget.
 	/// </summary>
-	bool search_input_box(char *filter, int filter_size, float width = 0.0f);
+	bool search_input_box(const char* label, char *filter, int filter_size, float width = 0.0f);
 
 	/// <summary>
 	/// Adds a file selection widget which has both a text input box for the path and a button to open a file selection dialog.
