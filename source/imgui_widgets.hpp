@@ -39,7 +39,7 @@ namespace reshade::imgui
 	/// <param name="label">Label text describing this widget.</param>
 	/// <param name="key">Shortcut, consisting of the [virtual key code, Ctrl, Shift, Alt].</param>
 	/// <param name="input">Reference to the input state.</param>
-	bool key_input_box(const char *label, unsigned int key[4], const reshade::input &input);
+	bool key_input_box(const char *label, const char* hint, const char* cover, unsigned int key[4], const reshade::input &input);
 
 	/// <summary>
 	/// Adds a TTF font file selection widget.

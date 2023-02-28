@@ -214,7 +214,7 @@ bool reshade::imgui::file_dialog(const char *name, std::filesystem::path &path, 
 	return result;
 }
 
-bool reshade::imgui::key_input_box(const char *name, unsigned int key[4], const reshade::input &input)
+bool reshade::imgui::key_input_box(const char *name, const char* hint, const char* cover, unsigned int key[4], const reshade::input &input)
 {
 	bool res = false;
 	char buf[48]; buf[0] = '\0';
@@ -223,7 +223,7 @@ bool reshade::imgui::key_input_box(const char *name, unsigned int key[4], const 
 
 	ImGui::BeginDisabled(ImGui::GetCurrentContext()->NavInputSource == ImGuiInputSource_Gamepad);
 
-	ImGui::InputTextWithHint(name, "Click to set keyboard shortcut", buf, sizeof(buf), ImGuiInputTextFlags_ReadOnly | ImGuiInputTextFlags_NoUndoRedo | ImGuiInputTextFlags_NoHorizontalScroll);
+	ImGui::InputTextWithHint(name, hint, buf, sizeof(buf), ImGuiInputTextFlags_ReadOnly | ImGuiInputTextFlags_NoUndoRedo | ImGuiInputTextFlags_NoHorizontalScroll);
 
 	if (ImGui::IsItemActive())
 	{
@@ -250,7 +250,7 @@ bool reshade::imgui::key_input_box(const char *name, unsigned int key[4], const 
 	}
 	else if (ImGui::IsItemHovered())
 	{
-		ImGui::SetTooltip("Click in the field and press any key to change the shortcut to that key.");
+		ImGui::SetTooltip(cover);
 	}
 
 	ImGui::EndDisabled();
