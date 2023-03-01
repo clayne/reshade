@@ -971,7 +971,6 @@ void reshade::runtime::draw_gui()
 			_rebuild_font_atlas = true;
 			save_config();
 		}
-
 		static constexpr std::pair<const char *, void(runtime::*)()> overlay_callbacks[] = {
 #if RESHADE_FX
 			{ "Home", &runtime::draw_gui_home },
@@ -1003,7 +1002,7 @@ void reshade::runtime::draw_gui()
 
 			// Attach most windows to the main dock space
 			for (const std::pair<const char *, void(runtime::*)()> &widget : overlay_callbacks)
-				ImGui::DockBuilderDockWindow(widget.first, main_space_id);
+				ImGui::DockBuilderDockWindow(_ut.get_char(widget.first, _lang), main_space_id);
 
 			// Attach editor window to the remaining dock space
 			ImGui::DockBuilderDockWindow("###editor", right_space_id);
@@ -1011,7 +1010,6 @@ void reshade::runtime::draw_gui()
 			// Commit the layout
 			ImGui::DockBuilderFinish(root_space_id);
 		}
-
 		ImGui::SetNextWindowPos(viewport->Pos + viewport_offset);
 		ImGui::SetNextWindowSize(viewport->Size - viewport_offset);
 		ImGui::SetNextWindowViewport(viewport->ID);
@@ -1038,7 +1036,8 @@ void reshade::runtime::draw_gui()
 
 		for (const std::pair<const char *, void(runtime:: *)()> &widget : overlay_callbacks)
 		{
-			if (ImGui::Begin(widget.first, nullptr, ImGuiWindowFlags_NoFocusOnAppearing)) // No focus so that window state is preserved between opening/closing the GUI
+			//if (ImGui::Begin(widget.first, nullptr, ImGuiWindowFlags_NoFocusOnAppearing)) // No focus so that window state is preserved between opening/closing the GUI
+			if (ImGui::Begin(_ut.get_char(widget.first, _lang), nullptr, ImGuiWindowFlags_NoFocusOnAppearing)) // No focus so that window state is preserved between opening/closing the GUI
 				(this->*widget.second)();
 			ImGui::End();
 		}
@@ -3231,11 +3230,11 @@ void reshade::runtime::draw_technique_editor()
 {
 	if (_effects.empty())
 	{
-		ImGui::TextColored(COLOR_YELLOW, "No effect files (.fx) found in the effect search paths%c", _effect_search_paths.empty() ? '.' : ':');
+		ImGui::TextColored(COLOR_YELLOW,_ut.get_char("no_effect_file", _lang), _effect_search_paths.empty() ? '.' : ':');
 		for (const std::filesystem::path &search_path : _effect_search_paths)
 			ImGui::TextColored(COLOR_YELLOW, "  %s", (g_reshade_base_path / search_path).lexically_normal().u8string().c_str());
 		ImGui::Spacing();
-		ImGui::TextColored(COLOR_YELLOW, "Please verify they are set up correctly in the settings and hit 'Reload'!");
+		ImGui::TextColored(COLOR_YELLOW,_ut.get_char("verify_set_up", _lang));
 		return;
 	}
 
@@ -3254,7 +3253,7 @@ void reshade::runtime::draw_technique_editor()
 			ImGui::PushStyleColor(ImGuiCol_Text, COLOR_RED);
 			ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
 
-			const std::string label = '[' + effect.source_file.filename().u8string() + ']' + " failed to compile";
+			const std::string label = '[' + effect.source_file.filename().u8string() + ']' + ' ' + _ut.get_char("failed_compile", _lang);
 			bool value = false;
 			ImGui::Checkbox(label.c_str(), &value);
 
@@ -3276,12 +3275,12 @@ void reshade::runtime::draw_technique_editor()
 
 			if (ImGui::BeginPopup("##context"))
 			{
-				if (ImGui::Button("Open folder in explorer", ImVec2(230.0f, 0)))
+				if (ImGui::Button(_ut.get_char("open_folder", _lang), ImVec2(230.0f, 0)))
 					utils::open_explorer(effect.source_file);
 
 				ImGui::Separator();
 
-				if (imgui::popup_button(ICON_FK_PENCIL " Edit source code", 230.0f))
+				if (imgui::popup_button(_ut.get_char("edit_code", _lang, "pencil"), 230.0f))
 				{
 					std::unordered_map<std::string, std::string> file_errors_lookup;
 					parse_errors(effect.errors,
@@ -3350,11 +3349,11 @@ void reshade::runtime::draw_technique_editor()
 				}
 
 				if (!effect.module.hlsl.empty() && // Hide if using SPIR-V, since that cannot easily be shown here
-					imgui::popup_button("Show compiled results", 230.0f))
+					imgui::popup_button(_ut.get_char("show_compiled_results", _lang), 230.0f))
 				{
 					std::string entry_point_name;
-					if (ImGui::MenuItem("Generated code"))
-						entry_point_name = "Generated code";
+					if (ImGui::MenuItem(_ut.get_char("generated_code", _lang)))
+						entry_point_name =_ut.get_char("generated_code", _lang);
 
 					ImGui::EndPopup();
 
@@ -3470,7 +3469,7 @@ void reshade::runtime::draw_technique_editor()
 			const bool is_not_top = index > 0;
 			const bool is_not_bottom = index < _techniques.size() - 1;
 
-			if (is_not_top && ImGui::Button("Move to top", ImVec2(230.0f, 0)))
+			if (is_not_top && ImGui::Button(_ut.get_char("move_top", _lang), ImVec2(230.0f, 0)))
 			{
 				_techniques.insert(_techniques.begin(), std::move(_techniques[index]));
 				_techniques.erase(_techniques.begin() + 1 + index);
@@ -3480,7 +3479,7 @@ void reshade::runtime::draw_technique_editor()
 					_preset_is_modified = true;
 				ImGui::CloseCurrentPopup();
 			}
-			if (is_not_bottom && ImGui::Button("Move to bottom", ImVec2(230.0f, 0)))
+			if (is_not_bottom && ImGui::Button(_ut.get_char("move_bottom", _lang), ImVec2(230.0f, 0)))
 			{
 				_techniques.push_back(std::move(_techniques[index]));
 				_techniques.erase(_techniques.begin() + index);
@@ -3494,12 +3493,12 @@ void reshade::runtime::draw_technique_editor()
 			if (is_not_top || is_not_bottom || (_input != nullptr && !force_enabled))
 				ImGui::Separator();
 
-			if (ImGui::Button("Open folder in explorer", ImVec2(230.0f, 0)))
+			if (ImGui::Button(_ut.get_char("open_folder", _lang), ImVec2(230.0f, 0)))
 				utils::open_explorer(effect.source_file);
 
 			ImGui::Separator();
 
-			if (imgui::popup_button(ICON_FK_PENCIL " Edit source code", 230.0f))
+			if (imgui::popup_button(_ut.get_char("edit_code", _lang, "pencil"), 230.0f))
 			{
 				std::filesystem::path source_file;
 				if (ImGui::MenuItem(effect.source_file.filename().u8string().c_str()))
@@ -3534,11 +3533,11 @@ void reshade::runtime::draw_technique_editor()
 			}
 
 			if (!effect.module.hlsl.empty() && // Hide if using SPIR-V, since that cannot easily be shown here
-				imgui::popup_button("Show compiled results", 230.0f))
+				imgui::popup_button(_ut.get_char("show_compiled_result", _lang), 230.0f))
 			{
 				std::string entry_point_name;
-				if (ImGui::MenuItem("Generated code"))
-					entry_point_name = "Generated code";
+				if (ImGui::MenuItem(_ut.get_char("generated_code", _lang)))
+					entry_point_name =_ut.get_char("generated_code", _lang);
 
 				ImGui::Separator();
 
@@ -3678,7 +3677,7 @@ void reshade::runtime::open_code_editor(editor_instance &instance)
 
 	if (!instance.entry_point_name.empty())
 	{
-		instance.editor.set_text(instance.entry_point_name == "Generated code" ?
+		instance.editor.set_text(instance.entry_point_name == _ut.get_char("generated_code", _lang)?
 			effect.module.hlsl : effect.assembly_text.at(instance.entry_point_name));
 		instance.editor.set_readonly(true);
 		return; // Errors only apply to the effect source, not generated code
