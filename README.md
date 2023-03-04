@@ -1,4 +1,4 @@
-# Reshade Developemnt Builds
+# ModShade Developemnt Builds
 
 *Note*: this is a leaked development branch, because of this, no support can be given at the time. 
 
