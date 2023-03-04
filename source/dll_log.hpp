@@ -2,6 +2,7 @@
  * Copyright (C) 2014 Patrick Mours
  * SPDX-License-Identifier: BSD-3-Clause OR MIT
  */
+//
 
 #pragma once
 
