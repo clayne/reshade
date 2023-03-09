@@ -17,6 +17,11 @@ ini_file &reshade::global_config()
 	return ini_file::load_cache(g_target_executable_path.parent_path() / L"ReShade.ini");
 }
 
+ini_file &reshade::language_config()
+{
+	return ini_file::load_cache(g_target_executable_path.parent_path() / L"Language.ini");
+}
+
 ini_file::ini_file(const std::filesystem::path &path) : _path(path)
 {
 	load();

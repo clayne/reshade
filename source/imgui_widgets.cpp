@@ -214,7 +214,7 @@ bool reshade::imgui::file_dialog(const char *name, std::filesystem::path &path, 
 	return result;
 }
 
-bool reshade::imgui::key_input_box(const char *name, unsigned int key[4], const reshade::input &input)
+bool reshade::imgui::key_input_box(const char *name, const char* hint, const char* cover, unsigned int key[4], const reshade::input &input)
 {
 	bool res = false;
 	char buf[48]; buf[0] = '\0';
@@ -223,7 +223,7 @@ bool reshade::imgui::key_input_box(const char *name, unsigned int key[4], const 
 
 	ImGui::BeginDisabled(ImGui::GetCurrentContext()->NavInputSource == ImGuiInputSource_Gamepad);
 
-	ImGui::InputTextWithHint(name, "Click to set keyboard shortcut", buf, sizeof(buf), ImGuiInputTextFlags_ReadOnly | ImGuiInputTextFlags_NoUndoRedo | ImGuiInputTextFlags_NoHorizontalScroll);
+	ImGui::InputTextWithHint(name, hint, buf, sizeof(buf), ImGuiInputTextFlags_ReadOnly | ImGuiInputTextFlags_NoUndoRedo | ImGuiInputTextFlags_NoHorizontalScroll);
 
 	if (ImGui::IsItemActive())
 	{
@@ -250,7 +250,7 @@ bool reshade::imgui::key_input_box(const char *name, unsigned int key[4], const 
 	}
 	else if (ImGui::IsItemHovered())
 	{
-		ImGui::SetTooltip("Click in the field and press any key to change the shortcut to that key.");
+		ImGui::SetTooltip(cover);
 	}
 
 	ImGui::EndDisabled();
@@ -272,7 +272,7 @@ bool reshade::imgui::font_input_box(const char *name, std::filesystem::path &pat
 
 	// Reset to the default font name if path is empty
 	if (path.empty())
-		path = L"ProggyClean.ttf";
+		path = L"simhei.ttf / ProggyClean.ttf";
 
 	ImGui::SameLine(0, spacing);
 	ImGui::SetNextItemWidth(80);
@@ -289,12 +289,12 @@ bool reshade::imgui::font_input_box(const char *name, std::filesystem::path &pat
 	return res;
 }
 
-bool reshade::imgui::search_input_box(char *filter, int filter_size, float width)
+bool reshade::imgui::search_input_box(const char* label ,char *filter, int filter_size, float width)
 {
 	bool res = false;
 	const bool show_clear_button = filter[0] != '\0';
 
-	if (ImGui::InputTextEx("##filter", "Search " ICON_FK_SEARCH, filter, filter_size,
+	if (ImGui::InputTextEx("##filter", label, filter, filter_size,
 			ImVec2(width - (show_clear_button ? ImGui::GetFrameHeight() + ImGui::GetStyle().ItemSpacing.x : 0.0001f), 0), ImGuiInputTextFlags_AutoSelectAll))
 		res = true;
 

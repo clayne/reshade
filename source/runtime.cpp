@@ -203,13 +203,16 @@ reshade::runtime::runtime(api::device *device, api::command_queue *graphics_queu
 	const unsigned int runtime_index = s_runtime_index++;
 
 	// Fall back to alternative configuration file name if it exists
-	std::error_code ec;
+	// 检查是否有配置文件 _config_path ，没有就替换为备用路径
+	std::error_code ec; 
+	// 如果配置文件不存在
 	if (std::filesystem::path config_path_alt = g_reshade_base_path / g_reshade_dll_path.filename().replace_extension(L".ini");
 		std::filesystem::exists(config_path_alt, ec) && !std::filesystem::exists(_config_path, ec))
 	{
 		_config_path = std::move(config_path_alt);
 	}
 	// Add an index to the config file name in case there are multiple runtimes
+	// 配置文件存在，给文件名加序号以防止多个进程
 	else if (runtime_index != 0)
 	{
 		const std::filesystem::path config_path_default = _config_path;
@@ -219,11 +222,14 @@ reshade::runtime::runtime(api::device *device, api::command_queue *graphics_queu
 	}
 
 #if RESHADE_GUI
+	// 初始化GUI
 	init_gui();
 #endif
 
+	// 加载配置
 	load_config();
 
+	// 初始化 fpng模块
 	fpng::fpng_init();
 }
 reshade::runtime::~runtime()
@@ -235,6 +241,7 @@ reshade::runtime::~runtime()
 
 #if RESHADE_GUI
 	// Save configuration before shutting down to ensure the current window state is written to disk
+	// 关闭前保存当前窗口状态配置
 	save_config();
 	ini_file::flush_cache(_config_path);
 
@@ -249,6 +256,7 @@ bool reshade::runtime::on_init(input::window_handle window)
 {
 	assert(!_is_initialized);
 
+	// 定义后台缓存描述
 	const api::resource_desc back_buffer_desc = _device->get_resource_desc(get_back_buffer(0));
 
 	_width = back_buffer_desc.texture.width;
@@ -257,6 +265,8 @@ bool reshade::runtime::on_init(input::window_handle window)
 	_back_buffer_samples = back_buffer_desc.texture.samples;
 
 	// Create resolve texture and copy pipeline (do this before creating effect resources, to ensure correct back buffer format is set up)
+	// 创建处理贴图并复制管线（创建效果资源前完成，确保正确的后台缓存格式设置）
+	// 设置缓存格式，如果 采样>1 或 是opengl 或 有透明度通道
 	if (back_buffer_desc.texture.samples > 1
 		// Always use resolve texture in OpenGL to flip vertically and support sRGB + binding effect stencil
 		|| _device->get_api() == api::device_api::opengl
@@ -267,6 +277,7 @@ bool reshade::runtime::on_init(input::window_handle window)
 		)
 	{
 #if RESHADE_FX
+		// 转换缓存格式
 		switch (_back_buffer_format)
 		{
 		case api::format::r8g8b8x8_unorm:
@@ -277,7 +288,7 @@ bool reshade::runtime::on_init(input::window_handle window)
 			break;
 		}
 #endif
-
+		// 创建资源
 		if (!_device->create_resource(
 				api::resource_desc(_width, _height, 1, 1, api::format_to_typeless(_back_buffer_format), 1, api::memory_heap::gpu_only, api::resource_usage::shader_resource | api::resource_usage::render_target | api::resource_usage::copy_dest | api::resource_usage::resolve_dest),
 				nullptr, back_buffer_desc.texture.samples == 1 ? api::resource_usage::copy_dest : api::resource_usage::resolve_dest, &_back_buffer_resolved) ||
@@ -301,6 +312,7 @@ bool reshade::runtime::on_init(input::window_handle window)
 			goto exit_failure;
 		}
 
+		// 创建管线和采样
 		if (_device->get_api() == api::device_api::d3d10 ||
 			_device->get_api() == api::device_api::d3d11 ||
 			_device->get_api() == api::device_api::d3d12)
@@ -337,6 +349,7 @@ bool reshade::runtime::on_init(input::window_handle window)
 
 #if RESHADE_FX
 	// Create an empty texture, which is bound to shader resource view slots with an unknown semantic (since it is not valid to bind a zero handle in Vulkan, unless the 'VK_EXT_robustness2' extension is enabled)
+	// 创建绑定到着色器资源视图插槽的空贴图
 	if (_empty_tex == 0)
 	{
 		// Use VK_FORMAT_R16_SFLOAT format, since it is mandatory according to the spec (see https://www.khronos.org/registry/vulkan/specs/1.1/html/vkspec.html#features-required-format-support)
@@ -358,6 +371,7 @@ bool reshade::runtime::on_init(input::window_handle window)
 	}
 
 	// Create effect color resource
+	// 创建效果颜色资源
 	if (_effect_color_tex == 0)
 	{
 		if (!update_effect_color_tex(_back_buffer_format))
@@ -365,6 +379,7 @@ bool reshade::runtime::on_init(input::window_handle window)
 	}
 
 	// Create effect stencil resource
+	// 创建效果模板资源
 	if (_effect_stencil_tex == 0)
 	{
 		// Find a supported stencil format with the smallest footprint (since the depth component is not used)
@@ -390,6 +405,7 @@ bool reshade::runtime::on_init(input::window_handle window)
 #endif
 
 	// Create render targets for the back buffer resources
+	// 为后台缓存资源创建渲染目标
 	for (uint32_t i = 0; i < get_back_buffer_count(); ++i)
 	{
 		const api::resource back_buffer_resource = get_back_buffer(i);
@@ -566,6 +582,7 @@ void reshade::runtime::on_reset()
 }
 void reshade::runtime::on_present()
 {
+	// 是否已初始化
 	assert(is_initialized());
 
 #if RESHADE_ADDON
@@ -847,6 +864,7 @@ void reshade::runtime::load_config()
 
 #if RESHADE_GUI
 	load_config_gui(config);
+	//load_ui_text(_ui_text_path);
 #endif
 }
 void reshade::runtime::save_config() const

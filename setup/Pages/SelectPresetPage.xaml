@@ -7,9 +7,9 @@
       d:DesignWidth="510" d:DesignHeight="638"
       Width="Auto" Height="Auto">
   <DockPanel LastChildFill="False">
-    <Label DockPanel.Dock="Top" Margin="10" Padding="0" VerticalAlignment="Top" Foreground="#FF003399" FontSize="16" Content="Select preset to install:" />
+    <Label DockPanel.Dock="Top" Margin="10" Padding="0" VerticalAlignment="Top" Foreground="#FF003399" FontSize="16" Content="选择预设安装：" />
     <TextBlock DockPanel.Dock="Top" Margin="10,5" TextWrapping="Wrap">
-      Choose a preset file (.ini) to configure ReShade to use it and install all used effect packages or click on "Skip" to use a default preset and manually select the effect packages to install.
+      选择 ReShade CN 要使用的预设文件 (.ini) 并安装所有使用的效果包，或点击“跳过”使用默认预设并手动选择效果包安装。
     </TextBlock>
     <Grid DockPanel.Dock="Bottom" Margin="10,5">
       <Grid.ColumnDefinitions>
@@ -18,7 +18,7 @@
         <ColumnDefinition Width="100" />
       </Grid.ColumnDefinitions>
       <TextBox x:Name="PathBox" Grid.Column="0" Text="" />
-      <Button Grid.Column="2" Content="_Browse..." Click="OnBrowseClick" />
+      <Button Grid.Column="2" Content="_浏览..." Click="OnBrowseClick" />
     </Grid>
   </DockPanel>
 </Page>

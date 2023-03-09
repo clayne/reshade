@@ -1,3 +1,31 @@
+# ReShade CN
+
+ReShade CN 是基于 ReShade 修改的汉化版，并倾向于《最终幻想14》而优化。
+
+## 更新说明
+
+### v0.1.0
+
+**此版本为测试版！！可能会有 BUG！！**
+**此版本仅为 ReShade CN 的安装程序，不包含任何着色器与预设！可以在安装程序中选择安装 ReShade 官方提供的预设与着色器。**
+**推荐使用前先熟悉 ReShade 的使用，如已有使用的其他 ReShade 版本，请先备份着色器/预设后再卸载已有版本安装。**
+
+主要功能：
+ - 将 UI 修改为支持多语言，默认为中文界面。
+ - 支持在游戏内界面的设置中增加 “语言” 选择，游戏内可切换语言，现支持中文与英文。
+ - 移除了深度缓存限制，能让需要深度缓存的着色器正常工作。
+
+多语言机制：
+安装 ReShade CN 后，会在安装文件夹生成一个 `Language.ini` 文件，里面包含了 UI 的不同语言文本。修改此文件可以改变UI文本内容。
+
+**如果没有这个文件，程序可能会崩溃！**
+
+默认会尝试使用 Windows 系统自带的"黑体"作为字体，如果没有找到，则会切换回英文，需要自己手动设置中文字体。
+
+使用的字符集包含 UI 与 Lilidream 翻译的汉化着色器所需的中文字符。
+
+
+
 ReShade
 =======
 
@@ -45,3 +73,6 @@ See the [ReShade Forum](https://reshade.me/forum) and [Discord](https://discord.
 
 ReShade is licensed under the terms of the [BSD 3-clause license](LICENSE.md).\
 Some source code files are dual-licensed and are also available under the terms of the MIT license, when stated as such at the top of those files.
+
+
+

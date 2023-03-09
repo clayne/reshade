@@ -11,15 +11,15 @@
     <DockPanel DockPanel.Dock="Top">
       <Label Margin="10" Padding="0" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" Foreground="#FF003399" FontSize="16">
         <StackPanel Orientation="Horizontal">
-          <TextBlock Text="Select " />
+          <TextBlock Text="选择 " />
           <TextBlock x:Name="PackageName" Text="effect" />
-          <TextBlock Text=" files to install:" />
+          <TextBlock Text=" 文件安装：" />
         </StackPanel>
       </Label>
-      <Button DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center" Width="100" Margin="10" Content="Uncheck _all" Click="OnCheckAllClick" KeyboardNavigation.TabIndex="2" />
+      <Button DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center" Width="100" Margin="10" Content="_全部不选" Click="OnCheckAllClick" KeyboardNavigation.TabIndex="2" />
     </DockPanel>
     <TextBlock DockPanel.Dock="Top" Margin="10,5" TextWrapping="Wrap">
-      Check all effect files (.fx) of the package you want to install/update. Files not checked here will not be installed or are left untouched when updating.
+      从套件中选择全部你想安装/更新的效果文件(.fx)。这里没有选择的文件将不会安装或升级。
     </TextBlock>
     <ListBox x:Name="ItemsListBox" Margin="10,5" HorizontalContentAlignment="Stretch" ItemsSource="{Binding Items}">
       <ListBox.ItemTemplate>

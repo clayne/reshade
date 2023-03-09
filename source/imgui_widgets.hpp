@@ -39,7 +39,7 @@ namespace reshade::imgui
 	/// <param name="label">Label text describing this widget.</param>
 	/// <param name="key">Shortcut, consisting of the [virtual key code, Ctrl, Shift, Alt].</param>
 	/// <param name="input">Reference to the input state.</param>
-	bool key_input_box(const char *label, unsigned int key[4], const reshade::input &input);
+	bool key_input_box(const char *label, const char* hint, const char* cover, unsigned int key[4], const reshade::input &input);
 
 	/// <summary>
 	/// Adds a TTF font file selection widget.
@@ -49,7 +49,7 @@ namespace reshade::imgui
 	/// <summary>
 	/// Adds a search text box widget.
 	/// </summary>
-	bool search_input_box(char *filter, int filter_size, float width = 0.0f);
+	bool search_input_box(const char* label, char *filter, int filter_size, float width = 0.0f);
 
 	/// <summary>
 	/// Adds a file selection widget which has both a text input box for the path and a button to open a file selection dialog.

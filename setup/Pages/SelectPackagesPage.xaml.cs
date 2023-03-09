@@ -101,8 +101,8 @@ namespace ReShade.Setup.Pages
 
 			if (sender is Button button)
 			{
-				const string CHECK_LABEL = "Check _all";
-				const string UNCHECK_LABEL = "Uncheck _all";
+				const string CHECK_LABEL = "选择全部";
+				const string UNCHECK_LABEL = "全部不选";
 
 				bool check = button.Content as string == CHECK_LABEL;
 				button.Content = check ? UNCHECK_LABEL : CHECK_LABEL;
