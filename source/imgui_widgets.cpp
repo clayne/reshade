@@ -272,7 +272,7 @@ bool reshade::imgui::font_input_box(const char *name, std::filesystem::path &pat
 
 	// Reset to the default font name if path is empty
 	if (path.empty())
-		path = L"ProggyClean.ttf";
+		path = L"simhei.ttf / ProggyClean.ttf";
 
 	ImGui::SameLine(0, spacing);
 	ImGui::SetNextItemWidth(80);
